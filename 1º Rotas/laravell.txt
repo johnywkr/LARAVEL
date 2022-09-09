@@ -1,0 +1,170 @@
+		COMEÇANDO COM LARAVEL 
+
+	INSTALACAO:
+	-> php 
+	-> composer
+
+	- Depois de instalar o PHP e o Composer, você pode criar um novo projeto Laravel através do create-projectcomando Composer:
+	
+		composer create-project laravel/laravel example-app 
+
+
+	ERROS
+	- Aconteceram alguns erros que precisaram ser resovidos apos a intalação dos programas acima , eu vou deixar como resolvi abaixo..
+
+	1º Precisei habilitar a extensão openssl do PHP para instalar o Composer
+	   - indo em configurações do apache do xampp e habilitando a extenção ->  extensão openssl
+	     OBS: É só retirar o ; da frente da extenção e salver o arquivo que ela estara habilitada -> erro ;extensão openssl | certo extensão openssl.
+
+	  - Agora desinstale o composer e intale-o de volta, para funcionar a alteração acima. Caso tenha o instalado antes.. 
+
+	Primeira parte do problema resolvido... Agora vamos para segunda parte heheh
+
+	2º Entre na pasta php-8.1.9-nts-Win32-vs16-x64 e procure pelo arquivo 'php' que tem uma engrenagem, vai estar entre o "php aplicaivo e o php.ini-development" 
+	   e habilite a extenção extension=fileinfo, para habilitala é só retirar o ; da frente dela e salvar o arquivo.
+
+	 - Agora, para verificar se o composer está instalado corretamente, abra cmd e digite composer e pressione Enter . Se você vir a saída como abaixo escrito composer e sua versão,
+	   ela foi instalada com sucesso. Caso contrário, você terá que reiniciar o PC e tentar novamente.	
+
+	para mais duvidas link: https://www.geeksforgeeks.org/how-to-enable-phps-openssl-extension-to-install-composer/
+
+
+	- Agora com a instalação feita e os erros corrigidos , crie um novo projeto laravel com o comando abaixo!
+
+		 -> composer create-project laravel/laravel example-app 
+
+	1º Depois do projeto criado abra um novo terminal e acesse a pasta do projeto laravel.
+
+	2º E digite o comando "php artisan serve" para acessar o servidor do laravel. vai te retornar um link com o endereço do servidor caso tenha feito tudo certo.
+
+	e pronto até aqui!!!!!!!
+
+
+=========================================== TRABALHANDO COM ROTAS ============================================
+
+- Indo na pasta routes , temos acesso as nossas rotas .
+se entramos em web.php e alterarmos a nossa rota para /home e e digitar no navegador ela irar funcionar , pq só estamos alterando o endereço local ..
+
+- Tambem podemos criar novas rotas , assim como foi feito no de correr do curso..
+
+	-> Na pasta 'routes', para criar uma nova rota é so escrever o comando -> Route::view('/jogos','jogos');
+	mas para o comando funcionar precisamor ir na pasta 'resources' e criar uma nova view para o comando retornala na tela final.
+	-> Assim vá em view e crie um arquivo 'jogos.blade.php' com uma extrutura basica para retornar algo na tela.
+
+OBS: Ao declarar a rota da nossa view, não é preciso escrever jogos.blade.php , só o primeiro nome, a route ja reconhce .
+
+
+========================================= ENVIANDO PARAMETROS STATICOS ==========================================
+
+- Agora vamos enviar parametros staticos para nossa view..
+
+Para pegar ou enviar um 'PARAMETRO', usamos o comando -> route::view('/jogos', 'jogos',['name'=>'GTA']); A variavel 'name' é que vai ser usada na nossa view para 
+retornar GTA. Agora para receber esse parametro, a nossa view 'jogos.blade.php' tera uma  TAG <p> para receber o parametro , ficando assim ->  <p>{{$name}}</p> .
+e sera mostrado na tela o resulto atraves do servidor do laravel..  
+
+------------------------------------------------------------------------------------------------------------------
+
+Agora vamos deixar mais 'dinamico' o parametro.
+
+O comando é o seguinte :  
+
+	 Route::get('/jogo/{name}', function($name){
+  		return view('jogos',['nomeJogo'=>$name]);
+    });
+
+ 1º Agora o que eu digitar na url , vai ser armazenado na variavel $name!
+ 2º E depois iremos retornar uma view atraves do parametro [nomeJogo] que esta recebendo a variavel $name!
+ 3º e agora na nossa view vamos passar o parametro nomeJogo. ficando assim ->  <p>{{$nomeJogo}}</p> .
+
+ --------------------------------------------------------------------------------------------------------------------------
+ 
+=> Agora vamos deixar o parametro de rota opcional -
+   Porque se a gente deixar sem parametro vai dar erro , é só fazer o teste no navegador removendo ou não especificando um nome como parametro.
+
+   -> ele retorna o erro de pagina não encontrada..
+   Para resover isso é simples , fazendo algumas alterações como o name seguido de uma ? 'name?', e a variavel $name recebendo o valor nulo.
+   obs: ? é para deixar o parametro opcional.
+
+ex: Route::get('/jogos/{name?}', function($name = null){
+   		return view('jogos',['nomeJogo'=>$name]);
+	});
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+=> Para receber parametros que contenha somente textos!
+
+  - Utilizamos antes de finalizar a rota utilizamos essa condição ->where('name','[A-Za-z]+');
+
+	Que diz o seguinte 'where -> onde' , que vai ser o 'name' que é o nome da nossa variavel, seja de A a Z maiusculo ou minusculo,
+	e tenha,uma ou mais caracteres.
+
+   Route::get('/jogos/{name?}', function($name = null){
+       return view('jogos',['nomeJogo'=>$name]);
+   })->where('name','[A-Za-z]+');
+
+   Entao se colocarmos textos no nosso parametro esperado na URL vai dar certo , e numeros retornara um erro!
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+=> Para receber parametros que contenha somente numeros!
+
+ - Utilizamos a condição ->where('id','[0-9]+');
+   e subistituimos os 'name' por 'id' dentro rota e na view -> <p>{{$idJogo}}</p>
+
+ex //Para receber só numeros
+	Route::get('/jogos/{id?}', function($id = null){
+		return view('jogos',['idJogo'=>$id]);
+	})->where('id','[0-9]+');
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+=> Para receber parametros que contenha numeros e textos!
+
+    Route::get('/jogos/{id?}/{name?}', function($id = null, $name = null){
+   		 return view('jogos',['idJogo'=>$id, 'nomeJogo'=>$name]);
+	})->where(['id','[0-9]+', 'name','[A-Za-z]+']);
+
+  1º Usamos dois parametros {id?} e {name?} e duas variaveis $id e $name recebendo null.
+  2º a ? é pra deixar o parametro opcional.
+  3º e uma nova condição :  ->where(['id','[0-9]+', 'name','[A-Za-z]+']);
+    onde o id vai receber de 0 a 9 e name qualquer texto de A a Z .
+
+  4º e nossa view vai receber  <p>{{$idJogo}}</p> e <p>{{$nomeJogo}}</p>
+  ficando assim na URL: http://127.0.0.1:8000/jogos/1/gta , retornando o id 1 e o jogo gta .
+
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+=> Agora vamos criar um botão para redirecionar para outra rota!!
+
+  1º Vamos retornar a nossa view jogos .
+    
+	 Route::get('/jogos', function(){
+   		  return view('jogos');
+     });
+
+  2º Vamos criar o nosso link , com a tag <a href=""></a> e apague as tags com caminhos anteriores .
+
+  3º vamos criar uma rota com uma condição , onde iremos usar o nome dessa rota no botao em nossa view.
+   
+    Route::get('/home', function(){
+       return view('welcome');
+    })->name('home-index');
+
+	Acima está a rota, e em view jogos.blade ficaria : <a href="{{route('home-index')}}">Clique aqui</a>
+	Nos retornando para a pagina de bem vindo do LARAVEL.
+
+	obs: sobre a questão de nomeclatura , não vai ser um problema pos estamos chamndo pela rota e nao pelo caminho, entao se é /home
+	poderiamos alterar para /casa que não daria erro.
+
+
+
+=> Se der algum erro o que podemos mostrar na tela ?
+
+  Temos a rota fallback que vai retornar um erro na tela , caso haja realmente um erro.
+
+  ex: Route::fallback(function(){
+   		 return "Erro ao localizar rota!";
+	   });
+
+	Para testar é só colocar qualquer nome na rota que vai aprecer o erro na tela do navegador.

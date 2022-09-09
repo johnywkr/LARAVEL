@@ -1,0 +1,112 @@
+
+====== Como trabalhar com CONTROLLER ======
+
+Como sempre, antes de tudo, start o servidor com -> 'php artisan serve' !
+
+1º Agora vamos entrar na pasta do nosso projeto e no terminal vamos usar um comando para criar um CONTROLLER.
+
+ php artisan make:controller "nomeDoController"
+
+ logo em seguida deve aparecer uma mensagem de INFO Controller created successfully.
+
+- Para encontrar nosso novo controlador, é só entrar na pasta app/http/controller/jogosController .
+
+
+2º Então juntando com que aprendemos com a aula de ROTAS , precisamos das rotas para chamar o controller para devolver uma view.
+
+ Assim a gente já começa alterando a nossa rota da aula passada retirando a função ficando assim: 
+  
+   -> Route::get('/jogos', [JogosController::class, 'index']);
+
+Quando forr digitado /jogos , vai chamar o meu controller na nossa public function index.
+
+- logo em seguida no nosso controller , criaremos a public function index() e dentro dela poderemos desenvolver toda nossa logica.
+
+	ex: 
+	
+		class JogosController extends Controller
+		{
+    		function index(){
+       		 	dd('Ola mundo');           
+    		}
+		}
+
+- O 'dd' é um help do laravel, que vai mostrar uma variavel ou um texto com um visual mas bonito!
+
+-> Entao já sabemos que a nossa 'rota' chamou o nosso 'controller', e o nosso 'controller' retornou o nosso dd('ola mundo') .
+
+
+3º Agora que o nosso 'controller' está funcionando, vamos retornar uma 'view'.
+
+  I - comente o dd.
+
+  II - retorne a view 
+
+    ex  class JogosController extends Controller
+		{
+    		function index(){
+       		 	//dd('Ola mundo');    
+				return view('jogos');       
+    		}
+		}
+
+-> Dessa maneira a nossa 'rota' vai estár chamando o nosso 'controller', e o nosso 'controller' vai está retornando perfeitamente a nossa 'view'.
+
+4º Agora vamos utilizar uns parametros para fazer alguns experimentos.
+
+ I - criando uma variavel $nome.
+
+	ex  class JogosController extends Controller
+		{
+    		function index(){
+       		 	//dd('Ola mundo');  
+				$nome = 'johne';  
+				return view('jogos');       
+    		}
+		}
+
+ II - agora como passar um parametro para view, simples exemplo abaixo!
+    comando usado para passar o parametro -> ['nome'=>$nome]. Antes crie a variavel $nome.
+
+	ex  class JogosController extends Controller
+		{
+    		function index(){
+       		 	//dd('Ola mundo');  
+				$nome = 'johne';  
+				return view('jogos', ['nome'=>$nome]);       
+    		}
+		}
+
+ III - Agora temos que receber esse parametro na 'view', usando {{$nome}}.
+
+    ex
+	<body>
+   		<h1>Testando rotas com views {{$nome}}</h1>
+    	<a href="{{route('home-index')}}">Clique aqui</a>
+	</body>
+
+-> Assim já não são parametros atraves de 'rotas' e sim do 'controller'.
+
+
+5º Passando mais um parametro.
+
+ I - criando uma variavel $id e passando o parametro para view 'id'=>$id.
+
+	ex  class JogosController extends Controller
+		{
+    		function index(){
+       		 	//dd('Ola mundo'); 
+				$nome = 'johne';
+			->  $id = 1;  
+				return view('jogos', ['nome'=>$nome, 'id'=>$id]);       
+    		}
+		}
+
+ II - E agora na view para receber esses parametros vamos utlizar paragrafos.
+
+	<body>
+    	<h1>Testando rotas com views {{$nome}}</h1>
+    ->  <p>Id: {{ $id }}</p>
+    ->  <p>Nome: {{ $nome }}</p>
+    	<a href="{{route('home-index')}}">Clique aqui</a>
+	</body>
