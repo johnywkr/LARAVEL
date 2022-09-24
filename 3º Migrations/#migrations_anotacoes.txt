@@ -1,0 +1,55 @@
+  ==COMO TRABALHAR COM MIGRATIONS==
+
+1º Criaremos o banco de dados para utilizarmos.
+
+  I - Iremos no arquivo,   .env e em DB_DATABASE colocaremos o nosso bancode dados.
+      Ficando assim => DB_DATABASE=jogos-laravel
+
+  II - Agora já temos nosso banco de dados conectado ao nosso projeto laravel.
+
+
+2º Agora podemos partir para as MIGRATIONS do laravel.
+
+  - MIGRATIONS é um recurso do laravel que permite gerencia as tabelas do banco de dados.
+
+
+  I - Usaremos o comando " php artisan make:migration create_jogos_table " para criar nossa migrations.
+
+  II  - As migrations estao na pasta database/migrations.
+
+  III - Iremos usar a  " public function up " para criar nossas tabelas .
+
+  IV - dentro da " public function up " ja termos uma estruturar pronta para criar nossa tabela .
+
+
+
+3º criando a tabela 
+
+    public function up()
+    {
+        Schema::create('jogos', function (Blueprint $table) {
+            $table->id();
+	    $table->string('nome,55');
+            $table->string('categoria',55);
+            $table->year('ano_criacao');
+            $table->double('valor',8,2);
+            $table->timestamps();
+        });
+    }
+
+  I - O $table->string('nome,55'); seria que nem o varchar(55) na criação da table no sql, que seria nome seguido de varchar e o resto dos atributos da tabela.
+
+     OBS:Antes do proximo passo aconteceu um erro de drive que precisou ser solucionado , esses erros podem ser executados com DOCKER mas como ainda nâo sei usar 
+      esta ferramenta , pesquisei até achar a solução.
+
+      - 1º Fui no cmd e digitei o comendo " php -i " que nos retornas varias expecificações sobre o php instalado e o
+        caminho -> Loaded Configuration File => C:\Users\MICRO16\Downloads\php-8.1.9-nts-Win32-vs16-x64\php.ini .
+
+      - 2º No explorador de arquivos, usamos o caminho acima para acessar o documento php.ini, e habilitar a linha "extension=pdo_mysql" 
+        e pronto problema resolvido. 
+
+     LINK https://www.youtube.com/watch?v=SlcMyHvHno4
+
+
+  II- E em seguida usaremos o comando "php artisan migrate" para migrar nossas tabelas e a table jogos para o banco de dados. 
+
